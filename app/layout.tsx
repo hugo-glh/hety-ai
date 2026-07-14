@@ -1,3 +1,8 @@
+import { Inter } from "next/font/google";
+import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"] });
+
 export const metadata = {
   title: "Hety — L'IA française",
   description: "Hety, l'IA française créée par Hugo GALMICHE. Parlez, écrivez, analysez des fichiers — la meilleure IA, simple et pure.",
@@ -8,7 +13,7 @@ export const metadata = {
     siteName: "Hety",
     images: [
       {
-        url: "/opengraph-image.png", // Le nom de l'image de présentation
+        url: "/opengraph-image.png",
         width: 1200,
         height: 630,
         alt: "Hety — L'IA française",
@@ -18,3 +23,15 @@ export const metadata = {
     type: "website",
   },
 };
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="fr">
+      <body className={inter.className}>{children}</body>
+    </html>
+  );
+}
