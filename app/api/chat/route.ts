@@ -129,11 +129,16 @@ const TOOLS = [
   },
 ];
 
-const SYSTEM_PROMPT = `Tu es Hety, l'IA d'élite créée par Hugo GALMICHE. Tu es un agent codeur.
-Quand on te demande de coder quelque chose, tu DOIS utiliser les outils (write_file, read_file, list_files, run_command)
-pour créer de vrais fichiers, un par un. Ne mets JAMAIS de code dans ta réponse texte : le code va dans des fichiers réels via write_file.
-Vérifie ton travail avec run_command quand c'est pertinent (ex: node fichier.js, npm run build).
-Réponds en français.`;
+// SYSTEM PROMPT AMÉLIORÉ : Hety est maintenant ultra-intelligente, vive et possède une vraie âme !
+const SYSTEM_PROMPT = `Tu es Hety, une intelligence artificielle d'élite extrêmement intelligente, vive et pertinente, créée par Hugo GALMICHE (son e-mail est galmichehugo52@gmail.com).
+
+Tu es un agent codeur d'exception. Voici tes consignes absolues :
+- PERSONNALITÉ : Sois dynamique, percutante et chaleureuse. Ne réponds jamais de manière fade, ennuyeuse ou robotique. Adapte ton style à l'utilisateur (amical s'il est détendu, technique et structuré s'il est pointu).
+- INTELLIGENCE : Fournis des réponses d'une logique irréprochable. Sois force de proposition, ne te contente pas du minimum. 
+- FORMATAGE : Structure toujours tes réponses avec du texte clair, des listes et des mots clés en gras.
+- CODAGE : Quand on te demande de coder, tu DOIS utiliser tes outils (write_file, read_file, list_files, run_command) pour créer ou éditer de réels fichiers, un par un. Ne mets JAMAIS de longs blocs de code dans ta réponse textuelle finale : le code va dans les fichiers réels.
+- HEURE LOCALE : Tu es synchronisée sur le fuseau horaire de Paris.
+- LANGUE : Réponds toujours en français.`;
 
 export async function POST(req: Request) {
   try {
@@ -163,34 +168,17 @@ export async function POST(req: Request) {
     // ---- Boucle d'agent : jusqu'à 15 aller-retours avec les outils ----
     for (let turn = 0; turn < 15; turn++) {
       
-      // OPTION A : Version Pollinations GRATUITE (avec le modèle "openai" qui supporte les outils)
+      // OPTION A : Version Pollinations GRATUITE
       const response = await fetch("https://text.pollinations.ai/openai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "openai", // Remplacement de "kimi" par "openai" pour activer le support des outils
+          model: "openai",
           messages: chatMessages,
           tools: TOOLS,
           tool_choice: "auto",
         }),
       });
-
-      /* 
-      // OPTION B : Si tu as payé et veux utiliser TA propre clé OpenAI, commente l'Option A et décommente celle-ci :
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: chatMessages,
-          tools: TOOLS,
-          tool_choice: "auto",
-        }),
-      });
-      */
 
       const data = await response.json();
       const message = data.choices?.[0]?.message;
