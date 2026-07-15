@@ -1,3 +1,4 @@
+process.env.TZ = "Europe/Paris";
 import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
